@@ -1,44 +1,68 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;               //UI?? ????? ?? ????? ???
-using System;                       //Arry ???? ????? ?????? ???? ???
+using UnityEngine.UI;
+using System;
 
 public class DialogSystem : MonoBehaviour
 {
     [SerializeField]
-    private SpeakerUI[] speakers;                       //????? ??????? ©¦??????? UI ?ò÷
+    private SpeakerUI[] speakers;
     [SerializeField]
-    private DialogData[] dialogs;                       //???? ?¬Ò??? ??? ??? ?ò÷
+    private DialogData[] dialogs;
     [SerializeField]
-    private bool DialogInit = true;                     //??? ???? ????
+    private bool DialogInit = true;
     [SerializeField]
-    private bool dialogsDB = false;                     //DB?? ???? ?¬Õ¡Æ? ????
+    private bool dialogsDB = false;
 
-    public int currentDialogIndex = -1;                 //???? ??? ????
-    public int currentSpeakerIndex = 0;                 //???? ???? ??? ????? Speakers ?ò÷ ????
-    public float typingSpeed = 0.1f;                    //???? ????? ????? ??????
-    public bool isTypingEffect = false;                 //???? ????? ????? ????????? ???.
+    public int currentDialogIndex = -1;
+    public int currentSpeakerIndex = 0;
+    public float typingSpeed = 0.1f;
+    public bool isTypingEffect = false;
+    
+    public Entity_Dialogue entity_Dialogue;
 
-        // Start is called before the first frame update
+    private void Awake()
+    {
+        SetAllClose();
+        {
+            if(dialogsDB)
+            {
+                Array.Clear(dialogs, 0, dialogs.Length);
+                Array.Resize(ref dialogs, entity_Dialogue.sheets[0].list.Count);
+
+                int ArrayCursor = 0;
+                foreach(Entity_Dialogue.Param param in entity_Dialogue.sheets[0].list)
+                {
+                    dialogs[ArrayCursor].index = param.index;
+                    dialogs[ArrayCursor].speakerUIindex = param.speakerUIindex;
+                    dialogs[ArrayCursor].name = param.name;
+                    dialogs[ArrayCursor].dialogue = param.dialogue;
+                    dialogs[ArrayCursor].characterPath = param.characterPath;
+                    dialogs[ArrayCursor].tweenType = param.tweenType;
+                    dialogs[ArrayCursor].nextindex = param.nextindex;
+                    ArrayCursor += 1;
+                }
+            }
+        }
+    }
+    
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         
     }
-
-    //????? ???? UI?? ????????? ????????? ????
+    
     private void SetActiveObjects(SpeakerUI speaker, bool visible)  
     {
         speaker.imageDialog.gameObject.SetActive(visible);
         speaker.textName.gameObject.SetActive(visible);
         speaker.textDialogue.gameObject.SetActive(visible);
-        //???? ??ÊÛ ???????? ???? ???? ??? ?????? 
+        //???? ??ï¿½ï¿½ ???????? ???? ???? ??? ?????? 
         speaker.objectArrow.SetActive(false);
 
         Color color = speaker.imgCharacter.color;
@@ -76,7 +100,7 @@ public class DialogSystem : MonoBehaviour
         int index = 0;
         isTypingEffect = true;
 
-        if(dialogs[currentDialogIndex].characterPath != "None") //None?? ????? DB?? ?????? ????? ©¦???? ??????? ?????¢¥?.
+        if(dialogs[currentDialogIndex].characterPath != "None") //None?? ????? DB?? ?????? ????? ï¿½ï¿½???? ??????? ?????ï¿½ï¿½?.
         {
             speakers[currentSpeakerIndex].imgCharacter.sprite =
                 Resources.Load<Sprite>(dialogs[currentDialogIndex].characterPath);
@@ -98,7 +122,7 @@ public class DialogSystem : MonoBehaviour
 
     public bool UpdateDialog(int currentIndex, bool InitType)
     {
-        //??? ?¬Ò? 1??? ??? 
+        //??? ?ï¿½ï¿½? 1??? ??? 
         if(DialogInit == true && InitType == true)
         {
             SetAllClose();
@@ -112,7 +136,7 @@ public class DialogSystem : MonoBehaviour
                 isTypingEffect = false;
                 StopCoroutine("OnTypingText");          //????? ????? ??????? , ???? ??? ????? ??????.
                 speakers[currentIndex].textDialogue.text = dialogs[currentDialogIndex].dialogue;
-                //??ÊÛ ??????? ?? ¨¨?? 
+                //??ï¿½ï¿½ ??????? ?? ï¿½ï¿½?? 
                 speakers[currentSpeakerIndex].objectArrow.SetActive(true);
 
                 return false;
@@ -132,31 +156,27 @@ public class DialogSystem : MonoBehaviour
         return false;
     }
 
-    private void Awake()
-    {
-        SetAllClose();
-    }
-
+    
     [System.Serializable]
     public struct SpeakerUI
     {
-        public Image imgCharacter;          //©¦???? ?????
-        public Image imageDialog;           //???? ImageUI
-        public Text textName;               //???? ??????? ©¦???? ??? ??? TextUI
-        public Text textDialogue;           //???? ??? ??? Text UI
-        public GameObject objectArrow;      //??ÊÛ ??????? ?? ?????? ¨¨?? ???????
+        public Image imgCharacter;          
+        public Image imageDialog;           
+        public Text textName;               
+        public Text textDialogue;           
+        public GameObject objectArrow;      
     }
 
     [System.Serializable]
     public struct DialogData
     {
-        public int index;                   //??? ???
-        public int speakerUIindex;          //????¨¨ ?ò÷ ???
-        public string name;                 //???
-        public string dialogue;             //???
-        public string characterPath;        //©¦???? ????? ???
-        public int tweenType;               //??? ???
-        public int nextindex;               //???? ??? 
+        public int index;                   
+        public int speakerUIindex;          
+        public string name;                 
+        public string dialogue;             
+        public string characterPath;        
+        public int tweenType;               
+        public int nextindex;                
     }
 
 

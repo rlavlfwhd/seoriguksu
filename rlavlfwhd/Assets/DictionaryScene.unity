@@ -603,11 +603,12 @@ MonoBehaviour:
     tweenType: 0
     nextindex: -100
   DialogInit: 1
-  dialogsDB: 0
+  dialogsDB: 1
   currentDialogIndex: -1
   currentSpeakerIndex: 0
   typingSpeed: 0.1
   isTypingEffect: 0
+  entity_Dialogue: {fileID: 11400000, guid: 6cb739725772f684dac107a6f601b366, type: 2}
 --- !u!114 &1171130441
 MonoBehaviour:
   m_ObjectHideFlags: 0
